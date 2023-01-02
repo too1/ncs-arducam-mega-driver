@@ -1,0 +1,28 @@
+#
+# Copyright (c) 2022 Nordic Semiconductor
+#
+# SPDX-License-Identifier: LicenseRef-Nordic-5-Clause
+#
+
+menuconfig ARDUCAM_MEGA
+	bool "Driver for the Arducam Mega camera module"
+	depends on SPI
+	select RING_BUFFER
+	help
+		Enable driver for the Arducam Mega camera module
+		
+if ARDUCAM_MEGA
+
+config ARDUCAM_MEGA_EVT_THREAD_STACK_SIZE
+	int "Event thread stack size"
+	default 1024
+	help
+	  Stack size of the event handler thread, used to run the application event handler. 
+
+config ARDUCAM_MEGA_EVT_THREAD_PRIORITY
+	int "Event thread priority"
+	default 5
+	help
+	  The priority of the event handler thread
+
+endif # ARDUCAM_MEGA
