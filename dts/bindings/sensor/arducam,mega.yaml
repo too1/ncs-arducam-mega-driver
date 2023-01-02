@@ -1,0 +1,8 @@
+# Copyright (c) 2023, Torbjorn Ovrebekk
+# SPDX-License-Identifier: Apache-2.0
+
+description: |
+    Arducam Mega spi camera module
+compatible: "nordic,arducam_mega"
+
+include: spi-device.yaml
