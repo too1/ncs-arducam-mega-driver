@@ -5,5 +5,6 @@ if(CONFIG_ARDUCAM_MEGA)
 	zephyr_library()
 	zephyr_library_sources(
 	  arducam_mega.c
+	  ArducamCamera.c
 	  )
   endif()

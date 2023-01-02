@@ -9,6 +9,41 @@
 #define LOG_MODULE_NAME arducam_mega
 LOG_MODULE_REGISTER(LOG_MODULE_NAME);
 
+
+void spiBegin(void)
+{
+
+}   
+ 
+uint8_t spiReadWriteByte(uint8_t TxData)
+{		
+			    
+}
+
+void spiCsOutputMode(int pin)
+{
+
+}
+
+void spiCsLow(int pin)
+{
+
+}
+void spiCsHigh(int pin)
+{
+
+}
+
+void delayMs(int val)
+{
+
+}
+
+void delayUs(int val)
+{
+
+}
+
 int arducam_mega_init(arducam_mega_event_handler_t evt_handler)
 {
 	int ret;
