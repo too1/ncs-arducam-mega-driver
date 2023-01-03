@@ -8,8 +8,8 @@ void arducamSpiBegin(void);
 
 uint8_t arducamSpiTransfer(void *cam, uint8_t TxData);
 void arducamCsOutputMode(int pin);
-void arducamSpiCsPinLow(void *cam, int pin);
-void arducamSpiCsPinHigh(void *cam, int pin);
+void arducamSpiCsPinLow(void *cam);
+void arducamSpiCsPinHigh(void *cam);
 void arducamDelayMs(int val);
 void arducamDelayUs(int val);
 

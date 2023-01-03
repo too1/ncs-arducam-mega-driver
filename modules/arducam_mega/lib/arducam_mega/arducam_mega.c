@@ -28,7 +28,7 @@ static int arducam_mega_int_init(const struct device *dev)
     }
 	LOG_INF("Int init run!!!");
 	data->camera = createArducamCamera(data->bus);
-
+	data->camera.spi_cs_gpio_spec = &data->cs_ctrl.gpio;
 	begin(&data->camera);
 
 	return 0;

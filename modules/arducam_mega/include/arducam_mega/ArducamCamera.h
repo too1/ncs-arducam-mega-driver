@@ -238,7 +238,6 @@ typedef uint8_t (*BUFFER_CALLBACK)(uint8_t*buffer, uint8_t lenght);	/**<Callback
 */
   
 typedef struct {
-	int csPin;					/**< CS pin */
 	uint32_t totalLength;		/**< The total length of the picture */
 	uint32_t receivedLength;	/**< The remaining length of the picture */
 	uint8_t blockSize;			/**< The length of the callback function transmission */
@@ -253,6 +252,7 @@ typedef struct {
 	BUFFER_CALLBACK callBackFunction;				/**< Camera callback function */
 	uint8_t verDate[3];             /**< Camera firmware version*/
 	struct SdkInfo* currentSDK;     /**< Current SDK version*/
+	const struct gpio_dt_spec *spi_cs_gpio_spec;
 	const struct device *spi_dev;
 }ArducamCamera;
 

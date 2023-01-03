@@ -15,12 +15,11 @@ static const struct spi_config spi_cfg = {
 	.cs = 0,
 };
 
-uint8_t arducamSpiTransfer(void *cam, uint8_t TxData)
+uint8_t arducamSpiTransfer(void *cam, uint8_t tx_data)
 {		
-	//printk("SPI print");
 	static uint8_t tx_buf[1];
 	static uint8_t rx_buf[1];
-	tx_buf[0] = TxData;
+	tx_buf[0] = tx_data;
 	static struct spi_buf s_tx_buf = {
 		.buf = tx_buf,
 		.len = sizeof(tx_buf)
@@ -48,14 +47,14 @@ void arducamCsOutputMode(int pin)
 
 }
 
-void arducamSpiCsPinLow(void *cam, int pin)
+void arducamSpiCsPinLow(void *cam)
 {
-	NRF_P1->OUTCLR = (1 << 12);
+	gpio_pin_set_dt(((ArducamCamera *)cam)->spi_cs_gpio_spec, 1);
 }
 
-void arducamSpiCsPinHigh(void *cam, int pin)
+void arducamSpiCsPinHigh(void *cam)
 {
-	NRF_P1->OUTSET = (1 << 12);
+	gpio_pin_set_dt(((ArducamCamera *)cam)->spi_cs_gpio_spec, 0);
 }
 
 void arducamDelayMs(int val)
