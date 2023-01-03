@@ -13,7 +13,8 @@
 #ifndef  __PLATFORM_H
 #define  __PLATFORM_H
 
-#include "NordicHal.h"
+//#include "NordicHal.h"
+#include "arducam_nordic_hal.h"
 
 #endif /*__PLATFORM_H*/
 

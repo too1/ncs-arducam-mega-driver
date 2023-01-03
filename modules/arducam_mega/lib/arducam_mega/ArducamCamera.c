@@ -194,7 +194,7 @@ void cameraInit(ArducamCamera* camera)
 {
 	arducamSpiBegin();
 	arducamCsOutputMode(camera->csPin);
-	arducamSpiCsPinLow(camera->csPin);
+	arducamSpiCsPinLow(camera, camera->csPin);
 }
 
 
@@ -223,7 +223,7 @@ CamStatus cameraBegin(ArducamCamera*camera)
 	return CAM_ERR_SUCCESS;
 }
 
-void cameraSetCapture(ArducamCamera*camera)
+void cameraSetCapture(ArducamCamera *camera)
 {
 	flushFifo(camera);
 	clearFifoFlag(camera);
@@ -484,17 +484,17 @@ uint8_t cameraGetBit(ArducamCamera*camera,uint8_t addr, uint8_t bit)
 
 void cameraSetFifoBurst(ArducamCamera*camera)
 {
-    arducamSpiTransfer(BURST_FIFO_READ);	
+    arducamSpiTransfer(camera, BURST_FIFO_READ);	
 }
 
 uint8_t cameraReadByte(ArducamCamera*camera)
 {
 	uint8_t data = 0;
-	arducamSpiCsPinLow(camera->csPin);	
-	arducamSpiTransfer(SINGLE_FIFO_READ);
-	arducamSpiTransfer(0x00);
-	data = arducamSpiTransfer(0x00);
-	arducamSpiCsPinHigh(camera->csPin);	
+	arducamSpiCsPinLow(camera, camera->csPin);	
+	arducamSpiTransfer(camera, SINGLE_FIFO_READ);
+	arducamSpiTransfer(camera, 0x00);
+	data = arducamSpiTransfer(camera, 0x00);
+	arducamSpiCsPinHigh(camera, camera->csPin);	
 	camera->receivedLength-=1;
 	return data;
 }
@@ -514,18 +514,18 @@ uint8_t cameraReadBuff(ArducamCamera*camera,uint8_t* buff,uint8_t length)
 	{
 		length=camera->receivedLength;
 	}
-	arducamSpiCsPinLow(camera->csPin);	
+	arducamSpiCsPinLow(camera, camera->csPin);	
 	setFifoBurst(camera);
 	if (camera->burstFirstFlag == 0)
 	{
 		camera->burstFirstFlag = 1;
-		arducamSpiTransfer(0x00);
+		arducamSpiTransfer(camera, 0x00);
 	}
 	for (uint8_t count = 0; count < length; count++)
 	{
-		buff[count]=arducamSpiTransfer(0x00);
+		buff[count]=arducamSpiTransfer(camera, 0x00);
 	}
-	arducamSpiCsPinHigh(camera->csPin);	
+	arducamSpiCsPinHigh(camera, camera->csPin);	
 	camera->receivedLength-=length;
   return length;
 }
@@ -544,10 +544,10 @@ uint8_t cameraReadReg(ArducamCamera*camera,uint8_t addr)
 
 uint8_t cameraBusWrite(ArducamCamera*camera,int address,int value)
 {	
-	arducamSpiCsPinLow(camera->csPin);
-	arducamSpiTransfer(address);
-	arducamSpiTransfer(value);
-	arducamSpiCsPinHigh(camera->csPin);
+	arducamSpiCsPinLow(camera, camera->csPin);
+	arducamSpiTransfer(camera, address);
+	arducamSpiTransfer(camera, value);
+	arducamSpiCsPinHigh(camera, camera->csPin);
 	arducamDelayMs(1);
 	return 1;
 }
@@ -555,22 +555,22 @@ uint8_t cameraBusWrite(ArducamCamera*camera,int address,int value)
 
 void cameraCsHigh(ArducamCamera*camera)
 {
-	 arducamSpiCsPinHigh(camera->csPin);	
+	 arducamSpiCsPinHigh(camera, camera->csPin);	
 }
 void cameraCsLow(ArducamCamera*camera)
 {
-	 arducamSpiCsPinLow(camera->csPin);	
+	 arducamSpiCsPinLow(camera, camera->csPin);	
 }
 
 
 uint8_t cameraBusRead(ArducamCamera*camera,int address)
 {
 	uint8_t value;
-	arducamSpiCsPinLow(camera->csPin);
-	arducamSpiTransfer(address);
-	value = arducamSpiTransfer(0x00);
-	value = arducamSpiTransfer(0x00);
-	arducamSpiCsPinHigh(camera->csPin);
+	arducamSpiCsPinLow(camera, camera->csPin);
+	arducamSpiTransfer(camera, address);
+	value = arducamSpiTransfer(camera, 0x00);
+	value = arducamSpiTransfer(camera, 0x00);
+	arducamSpiCsPinHigh(camera, camera->csPin);
 	return value;
 
 }
@@ -841,7 +841,7 @@ const struct CameraOperations ArducamcameraOperations = {
 	.lowPowerOff = cameraLowPowerOff,
 };
 
-ArducamCamera createArducamCamera(int CS)
+ArducamCamera createArducamCamera(const struct device *dev)
 {
 	ArducamCamera camera;
 	CameraType[0] = OV5640_CameraInfo;
@@ -852,9 +852,10 @@ ArducamCamera createArducamCamera(int CS)
 	camera.cameraDataFormat = FORMAT_JPEG;
 	camera.burstFirstFlag = FALSE;
 	camera.previewMode=FALSE;
-	camera.csPin = CS;
+	camera.csPin = 0; // DELETE
 	camera.arducamCameraOp = &ArducamcameraOperations;
 	camera.currentSDK = &currentSDK;
+	camera.spi_dev = dev;
 	return camera;
 }
 

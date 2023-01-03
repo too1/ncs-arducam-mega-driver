@@ -253,6 +253,7 @@ typedef struct {
 	BUFFER_CALLBACK callBackFunction;				/**< Camera callback function */
 	uint8_t verDate[3];             /**< Camera firmware version*/
 	struct SdkInfo* currentSDK;     /**< Current SDK version*/
+	const struct device *spi_dev;
 }ArducamCamera;
 
 
@@ -310,7 +311,7 @@ struct CameraOperations{
 //! @return Return a ArducamCamera instance
 //!
 //**********************************************
-ArducamCamera createArducamCamera(int cs);
+ArducamCamera createArducamCamera(const struct device *dev);
 
 
 //**********************************************
