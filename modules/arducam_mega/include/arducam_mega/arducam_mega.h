@@ -33,4 +33,8 @@ struct arducam_mega_data {
 
 int arducam_mega_init(arducam_mega_event_handler_t evt_handler);
 
+int arducam_mega_take_picture(const struct device *dev, CAM_IMAGE_MODE mode, CAM_IMAGE_PIX_FMT pixel_format);
+
+uint8_t arducam_mega_read_image_buf(const struct device *dev, uint8_t* buff, uint8_t length);
+
 #endif

@@ -8,9 +8,8 @@ void arducamSpiBegin(void)
 }   
  
 static const struct spi_config spi_cfg = {
-	.operation = SPI_WORD_SET(8) | SPI_TRANSFER_MSB |
-				 SPI_MODE_CPOL | SPI_MODE_CPHA,
-	.frequency = 4000000,
+	.operation = SPI_WORD_SET(8) | SPI_TRANSFER_MSB,
+	.frequency = 8000000,
 	.slave = 0,
 	.cs = 0,
 };

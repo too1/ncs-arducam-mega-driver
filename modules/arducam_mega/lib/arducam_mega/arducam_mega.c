@@ -1,6 +1,7 @@
 #define DT_DRV_COMPAT nordic_arducam_mega
 
 #include <arducam_mega.h>
+#include <ArducamCamera.h>
 #include <zephyr/sys/ring_buffer.h>
 #include <string.h>
 
@@ -34,6 +35,19 @@ static int arducam_mega_int_init(const struct device *dev)
 	return 0;
 }
 
+int arducam_mega_take_picture(const struct device *dev, CAM_IMAGE_MODE mode, CAM_IMAGE_PIX_FMT pixel_format)
+{
+	ArducamCamera *camera = &((struct arducam_mega_data *)dev->data)->camera;
+	takePicture(camera, mode, pixel_format);
+	return 0;
+}
+
+uint8_t arducam_mega_read_image_buf(const struct device *dev, uint8_t* buff, uint8_t length)
+{
+	ArducamCamera *camera = &((struct arducam_mega_data *)dev->data)->camera;
+	return readBuff(camera, buff, length);	
+}
+
 void uart_event_thread_func(void)
 {
 	static struct arducam_mega_evt_t new_event;
@@ -56,10 +70,7 @@ K_THREAD_DEFINE(app_uart_evt_thread, CONFIG_ARDUCAM_MEGA_EVT_THREAD_STACK_SIZE, 
 		.spi_conf = {						\
 			.frequency =					\
 				DT_INST_PROP(inst, spi_max_frequency),	\
-			.operation = (SPI_WORD_SET(8) |			\
-				      SPI_OP_MODE_MASTER |		\
-				      SPI_MODE_CPOL |			\
-				      SPI_MODE_CPHA),			\
+			.operation = (SPI_WORD_SET(8) |	SPI_OP_MODE_MASTER), \
 			.slave = DT_INST_REG_ADDR(inst),		\
 			.cs = &(arducam_mega_data_##inst.cs_ctrl),			\
 		},												\
