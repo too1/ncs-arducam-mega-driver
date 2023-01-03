@@ -521,10 +521,7 @@ uint8_t cameraReadBuff(ArducamCamera*camera,uint8_t* buff,uint8_t length)
 		camera->burstFirstFlag = 1;
 		arducamSpiTransfer(camera, 0x00);
 	}
-	for (uint8_t count = 0; count < length; count++)
-	{
-		buff[count]=arducamSpiTransfer(camera, 0x00);
-	}
+	arducamSpiFastRead(camera, buff, length);
 	arducamSpiCsPinHigh(camera);	
 	camera->receivedLength-=length;
   return length;
@@ -565,18 +562,13 @@ void cameraCsLow(ArducamCamera*camera)
 
 uint8_t cameraBusRead(ArducamCamera*camera,int address)
 {
-	uint8_t value;
+	uint8_t tx_buf[3] = {address, 0, 0};
+	uint8_t rx_buf[3];
 	arducamSpiCsPinLow(camera);
-	arducamSpiTransfer(camera, address);
-	value = arducamSpiTransfer(camera, 0x00);
-	value = arducamSpiTransfer(camera, 0x00);
+	arducamSpiFastTransfer(camera, tx_buf, rx_buf, 3);
 	arducamSpiCsPinHigh(camera);
-	return value;
-
+	return rx_buf[2];
 }
-
-
-
 
 void cameraWaitI2cIdle(ArducamCamera*camera)
 {

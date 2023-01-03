@@ -25,10 +25,10 @@ void main(void)
 		printk("ERROR: Camera device not found!\n");
 		return;
 	}
-	
+
 	while(1) {
 		printk("Attempting to take picture...\n");
-		arducam_mega_take_picture(camera_device, CAM_IMAGE_MODE_QVGA, CAM_IMAGE_PIX_FMT_JPG);
+		arducam_mega_take_picture(camera_device, CAM_IMAGE_MODE_FHD, CAM_IMAGE_PIX_FMT_JPG);
 		uint8_t data_buff[240];
 		uint8_t bytes_read;
 		int totalbytes = 0;

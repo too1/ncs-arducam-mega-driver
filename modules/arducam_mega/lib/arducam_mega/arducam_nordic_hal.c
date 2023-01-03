@@ -41,6 +41,37 @@ uint8_t arducamSpiTransfer(void *cam, uint8_t tx_data)
 	return rx_buf[0];
 }
 
+int arducamSpiFastTransfer(void *cam, uint8_t *tx_buf, uint8_t *rx_buf, uint32_t len)
+{
+	static struct spi_buf s_tx_buf;
+	s_tx_buf.buf = tx_buf;
+	s_tx_buf.len = len;
+	static struct spi_buf_set s_tx = {
+		.buffers = &s_tx_buf,
+		.count = 1
+	};
+	static struct spi_buf s_rx_buf;
+	s_rx_buf.buf = rx_buf;
+	s_rx_buf.len = len;
+	static struct spi_buf_set s_rx = {
+		.buffers = &s_rx_buf,
+		.count = 1
+	};	
+	return spi_transceive(((ArducamCamera *)cam)->spi_dev, &spi_cfg, &s_tx, &s_rx);
+}
+
+int arducamSpiFastRead(void *cam, uint8_t *rx_buf, uint32_t len)
+{
+	static struct spi_buf s_rx_buf;
+	s_rx_buf.buf = rx_buf;
+	s_rx_buf.len = len;
+	static struct spi_buf_set s_rx = {
+		.buffers = &s_rx_buf,
+		.count = 1
+	};	
+	return spi_read(((ArducamCamera *)cam)->spi_dev, &spi_cfg, &s_rx);
+}
+
 void arducamCsOutputMode(int pin)
 {
 

@@ -10,13 +10,6 @@
 #define LOG_MODULE_NAME arducam_mega
 LOG_MODULE_REGISTER(LOG_MODULE_NAME);
 
-int arducam_mega_init(arducam_mega_event_handler_t evt_handler)
-{
-	int ret;
-	LOG_INF("INITIALIZED");
-	return 0;
-}
-
 static int arducam_mega_int_init(const struct device *dev)
 {
 	const struct arducam_mega_cfg *const config = dev->config;
@@ -24,14 +17,13 @@ static int arducam_mega_int_init(const struct device *dev)
 
     data->bus = device_get_binding (config->bus_name);
     if (!data->bus) {
-        LOG_WRN ("master not found: %s", config->bus_name);
+        LOG_WRN ("SPI master not found: %s", config->bus_name);
         return -EINVAL;
     }
-	LOG_INF("Int init run!!!");
 	data->camera = createArducamCamera(data->bus);
 	data->camera.spi_cs_gpio_spec = &data->cs_ctrl.gpio;
 	begin(&data->camera);
-
+	LOG_DBG("Arducam Mega driver initialized");
 	return 0;
 }
 
