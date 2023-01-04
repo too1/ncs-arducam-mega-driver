@@ -2,7 +2,7 @@
 
 # Manually add the app_uart module to the sample
 list(APPEND ZEPHYR_EXTRA_MODULES
-  ${CMAKE_CURRENT_SOURCE_DIR}/modules/arducam_mega
+  ${CMAKE_CURRENT_SOURCE_DIR}/../../modules/arducam_mega
   )
 
 cmake_minimum_required(VERSION 3.13.1)
